@@ -1,0 +1,125 @@
+---
+title: "Introducción a la estadística Bayesiana"
+author: 
+- "Juan Sosa PhD" 
+- "jcsosam@unal.edu.co"
+date: ""
+output:
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Axiomatización
+
+**(Definición.)** La **incertidumbre** es un estado de información incompleta sobre algo de interés para **Usted** (persona genérica que desea razonar con sensatez en presencia de incertidumbre; Good, 1950).
+
+**(Definición.)** La **estadística** es el estudio de la incertidumbre; cómo medirla bien y cómo tomar buenas decisiones frente a ella.
+
+**(Definición.)** La **probabilidad** es la parte de las matemáticas dedicada a la cuantificación de la incertidumbre.
+
+Dos formas de conceptualizar probabilidad están en uso actualmente:
+	
+- **Frecuentista** (Venn, Boole, von Mises, Kolmogorov)
+
+  * La probabilidad es una **función** definida sobre los subconjuntos de un espacio muestral $\Omega$.
+  * La asignación de probabilidades se restringe a fenómenos intrínsecamente **repetibles** bajo **condiciones idénticas**.
+  * Se define $\textsf{Pr}(A)$ como la **frecuencia relativa** asociada con la ocurrencia del evento $A$ en el límite.
+  * **Pro**: matemáticas relativamente sencillas.
+  * **Contra**: solo se aplica a eventos intrínsecamente repetibles.
+  * **La probabilidad se entiende como una propiedad del fenómeno que se estudia**.
+	
+- **Subjetiva** (Bayes, Laplace, de Finetti, Cox, Jaynes)
+
+  * Las probabilidad es un **operador condicional** cuyos argumentos son proposiciones de falso-verdadero.
+  * No es posible asignar probabilidades sin hacer supuestos que dependan de Su **conocimiento**.
+  * Se define $\textsf{Pr}(A\mid\mathcal{B})$ como la **plausibilidad** (evidencia o cantidad de información) a favor del estatus verdadero de la propocisión $A$, basado en Su estado de información actual $\mathcal{B}$.
+  * **Pro**: todas las formas de incertidumbre son cuantificables.
+  * **Contra**: no hay garantía de que Su respuesta sea considerada como "adecuada" por Otros.
+  * **La probabilidad se refiere a estados mentales sobre el mundo y no al mundo per se**.
+
+**¡La evaluación de probabilidades es intrínsecamente subjetiva!**
+
+**(Axioma.)** Todas las evaluaciones de Su estado de información se realizan **condicionadas** en Sus suposiciones y juicios de valor acerca de cómo funciona el mundo. Estos supuestos y juicios se pueden expresar mediante un **conjunto finito de proposiciones** de falso-verdadero $\mathcal{B} = \{ B_1,\ldots,B_b \}$.
+
+**(Definición.)** El **ente de interés** para Usted objeto de estudio se denomina **conjunto de parámetros** y se denota con $\boldsymbol{\theta}$. En la práctica, $\boldsymbol{\theta}$ suele ser un vector, o una matriz, o un arreglo de números reales, pero en principio puede ser cualquier cosa (una función, una imagen, etc.). Los parámetros son **no observables**.
+
+**(Axioma.)** Existe una **fuente de información** (conjunto de datos) $\boldsymbol{y}$ que Usted considera relevante para disminuir Su incertidumbre acerca de $\boldsymbol{\theta}$. En la práctica, $\boldsymbol{y}$ suele ser de nuevo un vector, o una matriz, o un arreglo de números reales, pero en principio también puede ser cualquier cosa (textos, imágenes, etc.).
+
+**(Implicación.)** La presencia de $\boldsymbol{y}$ crea necesariamente una **dicotomía**. La información acerca de $\boldsymbol{\theta}$ puede ser **interna** o **externa** al conjunto de datos $\boldsymbol{y}$. La gente suele hablar de una dicotomía diferente: Su información acerca de $\boldsymbol{\theta}$ **antes** (a priori) y **después** (a posteriori) de observar $\boldsymbol{y}$, pero las consideraciones temporales son irrelevantes.
+
+# Fundamentos
+
+La **inferencia estadística** es un proceso inductivo que consiste en **aprender** (disminuir la incertidumbre) acerca de los **parámetros** (características) $\boldsymbol{\theta}=(\theta_1,\ldots,\theta_k)$ de una **población** (proceso generativo) a partir de una **fuente de información** (conjunto de datos) $\boldsymbol{y}=(y_1,\ldots,y_n)$ de la misma. 
+
+Inferencia estadística **basada en el modelo** (mecanismo aleatorio que caracteriza como surgen los datos). **No hay una forma única** de definir el modelo; depende del **estado de información** y del **punto de vista** del analista.
+
+**Ingredientes del paradigma Bayesiano**:
+
+- **Distribución previa** $p(\boldsymbol{\theta})$: estado de información acerca de $\boldsymbol{\theta}$ **antes** de que se observen los datos en $\boldsymbol{y}$. 
+- **Distribución muestral** $p(\boldsymbol{y}\mid\boldsymbol{\theta})$: mecanismo aleatorio que caracteriza completamente **cómo se genera** $\boldsymbol{y}$ dado un valor específico de $\boldsymbol{\theta}$. 
+- **Distribución posterior** $p(\boldsymbol{\theta}\mid \boldsymbol{y})$: estado de información actualizado acerca de $\boldsymbol{\theta}$ **después** de que ha observado $\boldsymbol{y}$.
+
+El **Teorema de Bayes** es el método racional **óptimo** que garantiza la **coherencia y consistencia lógica** para **actualizar** el estado de información acerca de $\boldsymbol{\theta}$ de acuerdo con la información contenida en $\boldsymbol{y}$:
+$$
+p(\boldsymbol{\theta}\mid \boldsymbol{y}) = \frac{p(\boldsymbol{\theta},\boldsymbol{y})}{p(\boldsymbol{y})} = \frac{p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})}{\int_\Theta p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})\,\text{d}\boldsymbol{\theta}}\propto p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})\,,
+$$
+donde $\Theta$ es el conjunto de todos los posibles valores que puede asumir $\boldsymbol{\theta}$.
+
+El teorema de Bayes no indica cuál debería ser Su estado de información acerca de $\boldsymbol{\theta}$, sino **cómo debería cambiar** bajo la luz de nueva información $\boldsymbol{y}$.
+
+```{r, eval = TRUE, echo=FALSE, out.width="100%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("life.jpg")
+```
+
+# Algunas implicaciones
+
+Es posible considerar directamente la **información previa** (externa al conjunto de datos) acerca de $\boldsymbol{\theta}$.
+
+$\boldsymbol{\theta}$ es una cantidad aleatoria y $\boldsymbol{y}$ es una cantidad fija. La aleatoriedad de $\boldsymbol{y}$ está dada antes de realizar el proceso de observación.
+
+La expresión 
+$$
+    p(\boldsymbol{y}) = \int_\Theta p(\boldsymbol{y}\mid\boldsymbol{\theta})\,p(\boldsymbol{\theta})\,\text{d}\boldsymbol{\theta}
+$$ 
+establece que la distribución marginal de $\boldsymbol{y}$ es una **mezcla** (promedio ponderado) de la distribución condicional de $\boldsymbol{y}$ dado $\boldsymbol{\theta}$, ponderada por $p(\boldsymbol{\theta})$. Además, $p(\boldsymbol{y})$ no depende de $\boldsymbol{\theta}$, y por lo tanto es una cantidad constante respecto a $\boldsymbol{\theta}$ que normaliza la distribución posterior $p(\boldsymbol{\theta}\mid \boldsymbol{y})$.
+	
+La distribución $p(\boldsymbol{y}\mid\boldsymbol{\theta})$ se considera como una función de $\boldsymbol{\theta}$ una vez que se ha observado $\boldsymbol{y}$. Fisher (1922) popularizó esta misma idea y la llamó **función de verosimilitud**: $\ell(\theta\mid\boldsymbol{y}) = c\,p(\boldsymbol{y}\mid\boldsymbol{\theta})$, donde $c$ es una constante positiva arbitraria, pero Bayes (1764) vio su importancia primero. Así, $\ell(\boldsymbol{\theta}\mid\boldsymbol{y})$ representa la información acerca de $\boldsymbol{\theta}$ **interna** al conjunto de datos.
+    
+Con esta nueva notación y terminología, el teorema de Bayes se convierte en
+$p(\boldsymbol{\theta}\mid \boldsymbol{y}) \propto \ell(\boldsymbol{\theta}\mid\boldsymbol{y})\,p(\boldsymbol{\theta})$
+y por lo tanto 
+$$
+  \log p(\boldsymbol{\theta}\mid \boldsymbol{y}) \propto \log \ell(\boldsymbol{\theta}\mid\boldsymbol{y}) + \log p(\boldsymbol{\theta})\,.
+$$
+
+# Observaciones
+
+La **inferencia Bayesiana es intrínsecamente subjetiva** (basado en supuestos y juicios de valor) porque está basada en Su **estado de información** (interpretación subjetiva de la probabilidad).
+
+La formulación de $p(\boldsymbol{\theta})$ es **fundamental**. La distribución previa es un resumen de lo que sabe (y no sabe) acerca de $\boldsymbol{\theta}$ externo al conjunto de datos $\boldsymbol{y}$ (de conjuntos de datos anteriores de los que Usted está al tanto, de la literatura pertinente, de la opinión de expertos, etc.). **No hay una forma garantizada** de hacer esto. Se recomienda emplear **distribuciones previas difusas** (distribuciones que asignan probabilidad uniformemente en el espacio de parámetros) cuando no se disponga de información a priori acerca de $\boldsymbol{\theta}$.
+	
+La **formulación del modelo no es única** (incertidumbre del modelo).
+
+Las **integrales pueden ser difíciles** de aproximar con precisión.
+	
+Dado que la subjetividad es inevitable, se deben hacer evidentes todos los supuestos y juicios en el análisis y examinar **qué tan sensibles son las conclusiones** a perturbaciones razonables de los supuestos y juicios.
+
+# Referencias
+
+```{r, eval = TRUE, echo=FALSE, out.width="25%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("Gelmancoverbook.png")
+```
+
+```{r, eval = TRUE, echo=FALSE, out.width="25%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("Hoffcoverbook.jpg")
+```
+
+```{r, eval = TRUE, echo=FALSE, out.width="25%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("Reichcoverbook.jpg")
+```
