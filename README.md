@@ -4,3 +4,4 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 
 0. Programa.
 1. Introducción.
+2. Intercambiabilidad.
