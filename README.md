@@ -7,6 +7,8 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 0. Programa.
 1. Introducción.
 2. Intercambiabilidad.
+3. Modelo Binomial.
+4. Modelo de Grafos Aleatorios.
 
 ## Talleres 
 
