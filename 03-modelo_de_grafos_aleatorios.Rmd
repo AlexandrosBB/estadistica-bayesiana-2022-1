@@ -35,7 +35,7 @@ Algunos ejemplos:
 - Redes de información (e.g., *World Wide Web*).
 - Redes de transporte (e.g., red global de aerolineas).
 - Redes sociales *on-line* (e.g., *Facebook*).
-- Redes laborales (e.g., rede de colaboración).
+- Redes laborales (e.g., red de colaboración).
 - Redes biológicas (e.g., red de proteinas).
 
 Las interacciones de las partes que constituyen un sistema conducen a comportamientos colectivos y propiedades a nivel global.
@@ -124,7 +124,8 @@ m
 
 ```{r, fig.height = 8, fig.width = 8}
 # grafico
-plot(lazega, vertex.label = NA, vertex.size = 6, edge.color = "gray50", vertex.frame.color = 1)
+set.seed(1234)
+plot(lazega, vertex.label = 1:n, vertex.size = 7, edge.color = "gray50", vertex.frame.color = 1)
 box()
 title(main = "Trabajo colaborativo")
 ```
@@ -148,21 +149,21 @@ Y[1:10, 1:10]
 ```{r}
 # funcion para graficar la matriz de adyacencia
 heat.plot0 <- function (mat, show.grid = FALSE, cex.axis, tick, labs, col.axis, ...)
-{ 
-        JJ <- dim(mat)[1]
-        colorscale <- c("white", rev(heat.colors(100)))
-        if(missing(labs))     labs <- 1:JJ
-        if(missing(col.axis)) col.axis <- rep("black", JJ)
-        if(missing(cex.axis)) cex.axis <- 1
-        if(missing(tick))     tick <- TRUE
-        ## adjacency matrix
-        image(seq(1, JJ), seq(1, JJ), mat, axes = FALSE, xlab = "", ylab = "", col = colorscale[seq(floor(100*min(mat)), floor(100*max(mat)))], ...)
-        for(j in 1:JJ){
-                axis(1, at = j, labels = labs[j], las = 2, cex.axis = cex.axis, tick, col.axis = col.axis[j], col.ticks = col.axis[j])
-                axis(2, at = j, labels = labs[j], las = 2, cex.axis = cex.axis, tick, col.axis = col.axis[j], col.ticks = col.axis[j])
-        }
-        box()
-        if(show.grid) grid(nx = JJ, ny = JJ)
+{
+  JJ <- dim(mat)[1]
+  colorscale <- c("white", rev(heat.colors(100)))
+  if(missing(labs))     labs <- 1:JJ
+  if(missing(col.axis)) col.axis <- rep("black", JJ)
+  if(missing(cex.axis)) cex.axis <- 1
+  if(missing(tick))     tick <- TRUE
+  ## adjacency matrix
+  image(seq(1, JJ), seq(1, JJ), mat, axes = FALSE, xlab = "", ylab = "", col = colorscale[seq(floor(100*min(mat)), floor(100*max(mat)))], ...)
+  for(j in 1:JJ){
+    axis(1, at = j, labels = labs[j], las = 2, cex.axis = cex.axis, tick, col.axis = col.axis[j], col.ticks = col.axis[j])
+    axis(2, at = j, labels = labs[j], las = 2, cex.axis = cex.axis, tick, col.axis = col.axis[j], col.ticks = col.axis[j])
+  }
+  box()
+  if(show.grid) grid(nx = JJ, ny = JJ)
 }
 ```
 
