@@ -122,10 +122,18 @@ m <- n*(n-1)/2
 m
 ```
 
-```{r, fig.height = 8, fig.width = 8}
+```{r, fig.height = 8, fig.width = 16}
 # grafico
+par(mfrow = c(1,2))
+# diseño ciruclar
+plot(lazega, vertex.label = 1:n, vertex.size = 9, edge.color = "gray50", vertex.frame.color = 1, layout = layout_in_circle)
+box()
+title(main = "Trabajo colaborativo")
+# diseño de Fruchterman y Reingold
+# Fruchterman, T.M.J. and Reingold, E.M. (1991). Graph Drawing by Force-directed Placement. Software - Practice and Experience, 21(11):1129-1164.
+# https://igraph.org/r/doc/layout_with_fr.html
 set.seed(1234)
-plot(lazega, vertex.label = 1:n, vertex.size = 7, edge.color = "gray50", vertex.frame.color = 1)
+plot(lazega, vertex.label = 1:n, vertex.size = 9, edge.color = "gray50", vertex.frame.color = 1, layout = layout_with_fr)
 box()
 title(main = "Trabajo colaborativo")
 ```
