@@ -9,6 +9,7 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 2. Intercambiabilidad.
 3. Modelo Binomial.
 4. Modelo de Grafos Aleatorios.
+5. Modelo Poisson.
 
 ## Talleres 
 
