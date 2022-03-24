@@ -44,6 +44,28 @@ Las interacciones de las partes que constituyen un sistema conducen a comportami
 knitr::include_graphics("graph0.jpg")
 ```
 
+# Otros tipos de redes
+
+## Redes Bayesianas
+            
+Las **redes Bayesianas** son una clase de **modelos gráficos** que permiten una representación de las **dependencias probabilísticas** entre un conjunto dado de variables aleatorias por medio de un *gráfico acíclico dirigido* (DAG), donde cada nodo corresponde a una variable aleatoria.
+
+```{r, eval = TRUE, echo=FALSE, out.width="33%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("bayesian_net.png")
+```
+
+Ver por ejemplo, Scutari, M., & Denis, J. B. (2021). *Bayesian networks: with examples in R*. CRC press.
+
+## Redes neuronales
+
+Una **red neuronal** es un **modelo computacional** con varias **capas de nodos** conectados, cuyo comportamiento está determnado por la forma en que se conectan los nodos así como por la ponderación de las conexiones. Usualmente se utilizan para tareas de identificación complejas, como el reconocimiento facial, la traducción de textos, y el reconocimiento de voz.
+
+```{r, eval = TRUE, echo=FALSE, out.width="50%", fig.pos = 'H', fig.align = 'center'}
+knitr::include_graphics("neuronal_net.jpg")
+```
+
+Ver por ejemplo, Ghatak, A. (2019). *Deep learning with R*. Springer.
+
 # Tipos de relaciones
 
 ## No dirigidas y dirigidas
@@ -83,6 +105,16 @@ Ejemplos de relaciones **ponderadas**:
 
 - Número de veces que congresistas apoyan un proyecto de ley juntos.
 - Distancia geográfica entre ciudades.
+
+# Fuentes de datos
+
+- http://networkrepository.com/
+- https://sites.duke.edu/dnac/resources/datasets/
+- https://snap.stanford.edu/
+- https://github.com/awesomedata/awesome-public-datasets#socialnetworks
+- http://www-personal.umich.edu/~mejn/netdata/
+- https://linqs.soe.ucsc.edu/data
+- https://kateto.net/2016/05/network-datasets/
 
 ## Ejemplo: trabajo colaborativo
 
@@ -334,7 +366,7 @@ theta_hat + c(-1,1)*qnorm(p = 0.975)*I_hat^(-0.5)
 
 ## Inferencia Bayesiana
 
-Asuminedo una **distribución previa** de la forma $\theta\sim\textsf{Beta}(a,b), la **distribución posterior** es
+Asuminedo una **distribución previa** de la forma $\theta\sim\textsf{Beta}(a,b)$, la **distribución posterior** es
 $$
 \theta\mid \mathbf{Y} \sim \textsf{Beta}\left(\theta\mid a + s, b+m-s\right)\,,
 $$
