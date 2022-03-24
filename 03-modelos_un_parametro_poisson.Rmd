@@ -201,15 +201,20 @@ r1 <- mean(y1)/var(y1)
 print(r1)
 r2 <- mean(y2)/var(y2)
 print(r2)
+# analisis exploratorio de datos
+summary(y1)
+summary(y2)
 ```
 
-```{r, fig.height = 4, fig.width = 8}
+```{r, fig.height = 5, fig.width = 5}
 # distribucion de frecuencias
-par(mfrow = c(1,2), mar=c(3,3,1.4,1.4), mgp = c(1.75,0.75,0))
-plot(100*table(y1)/n1, type = "h", xlab = "y", ylab = "F. Relativa", col = gray(.5), 
-     lwd = 3, ylim = c(0,35), main = "Menos que pregrado")
-plot(100*table(y2)/n2, type = "h", xlab = "y", ylab = "F. Relativa", col = gray(0), 
-     lwd = 3, ylim = c(0,35), main = "Pregrado o más")
+par(mfrow = c(1,1), mar = c(3,3,1.4,1.4), mgp = c(1.75,.75,0))
+y <- 0:6
+plot(y - .07, table(factor(x = y1, levels = y))/n1, col = 2, type = "h", ylim = c(0,.4), lwd = 3,
+     ylab = "F. Relativa", xlab = "No. de hijos", main = "", yaxt = "n")
+points(y + .07, table(factor(x = y2, levels = y))/n2, col = 4, type = "h", lwd = 3)
+axis(side = 2)
+legend("topright", legend = c("Menos que preg.", "Preg. o más"), bty = "n", lwd = 2, col = c(2,4))
 ```
 
 ## Distribuciones posterior y predictiva posterior
@@ -233,11 +238,11 @@ bp2 <- b + n2
 print(bp2)
 ```
 
-```{r, fig.height = 4, fig.width = 9}
+```{r, fig.height = 5, fig.width = 10}
 # grafico
 par(mfrow = c(1,2), mar = c(3,3,1.4,1.4), mgp = c(1.75,.75,0))
 theta <- seq(0, 5, length = 1000)
-plot(NA, NA, xlim = c(0,4), ylim = c(0,5.5), xlab=expression(theta),
+plot(NA, NA, xlim = c(0,4), ylim = c(0,5.5), xlab = expression(theta),
      ylab = expression(paste("p","(",theta," | ",y,")",sep="")),
      main = "Posterior")
 lines(theta, dgamma(theta, shape = ap1, rate = bp1), col = 2, lwd = 2)
@@ -245,9 +250,8 @@ lines(theta, dgamma(theta, shape = ap2, rate = bp2), col = 4, lwd = 2)
 lines(theta, dgamma(theta, shape = a  , rate = b  ), col = 1, lwd = 1)
 abline(h = 0, col = 1)
 y <- 0:12
-plot(y - .07, dnbinom(y, size = ap1, mu = ap1/bp1), col = 2, type = "h",
-     ylab = "p(y* | y )", xlab = "y*", ylim = c(0,.4), lwd = 3,
-     main = "Predictiva posterior")
+plot(y - .07, dnbinom(y, size = ap1, mu = ap1/bp1), col = 2, type = "h", ylim = c(0,.4), lwd = 3,
+     ylab = "p(y* | y )", xlab = "y*", main = "Predictiva posterior")
 points(y + .07, dnbinom(y, size = ap2, mu = ap2/bp2), col = 4, type = "h", lwd = 3)
 legend("topright", legend = c("Menos que preg.", "Preg. o más", "Previa"), 
        bty = "n", lwd = 2, col = c(2, 4, 1))
@@ -467,6 +471,27 @@ B_{01} = \frac{\Gamma(a)}{b^a}\,\frac{\Gamma(a+s_1+s_2)}{\Gamma(a+s_1)\Gamma(a+s
 $$
 
 ```{r}
+# filtro
+indices <- (df$P_PARENTESCOR == 1) & (df$P_SEXO == 2) & (df$P_EDADR == 9) & (df$PA1_GRP_ETNIC == 6) & (df$PA_LUG_NAC %in% c(2,3)) & (df$PA_VIVIA_5ANOS %in% c(2,3)) & (df$PA_HNV %in% c(1,2)) & (df$P_ALFABETA == 1)
+```
+
+```{r}
+# y1 : numero de hijos, mujeres de 40 años, sin pregrado o menos
+# y2 : numero de hijos, mujeres de 40 años, con pregrado o mas
+y1 <- as.numeric(df[indices & (df$P_NIVEL_ANOSR == 0), c("PA1_THNV")])
+y2 <- as.numeric(df[indices & (df$P_NIVEL_ANOSR == 1), c("PA1_THNV")])
+```
+
+```{r}
+# tamaños de muestra
+n1 <- length(y1)
+n2 <- length(y2)
+# estadisticos suficientes
+s1 <- sum(y1)
+s2 <- sum(y2)
+```
+
+```{r}
 # factor de Bayes 10
 # calcular en escala log y exponenciar
 B01 <- exp(lgamma(a)-a*log(b)+lgamma(a+s1+s2)-lgamma(a+s1)-lgamma(a+s2)+
@@ -474,6 +499,7 @@ B01 <- exp(lgamma(a)-a*log(b)+lgamma(a+s1+s2)-lgamma(a+s1)-lgamma(a+s2)+
 B10 <- 1/B01
 print(B10)
 # valor p frecuentista (asintotico)
+# valor p = Pr(observar datos tan o más extremos en dirección de H1 ∣ H0 es cierta)
 yb1 <- mean(y1)
 yb2 <- mean(y2)
 sd1 <- sd(y1)
