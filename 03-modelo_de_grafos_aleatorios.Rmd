@@ -123,6 +123,7 @@ Red de relaciones de trabajo colaborativo entre miembros de una firma de abogado
 **Lazega, E. (2001). The collegial phenomenon: The social mechanisms of cooperation among peers in a corporate law partnership. Oxford University Press on Demand.**
 
 ```{r}
+# librerias
 suppressMessages(suppressWarnings(library(igraph)))
 suppressMessages(suppressWarnings(library(sand)))
 
@@ -224,7 +225,7 @@ Se define $f_d$ como la fracción de vértices $v\in V$ tales que $d_v=d$. La co
 
 ```{r}
 # grados
-d <- degree(lazega)
+d <- igraph::degree(lazega)
 d
 d[order(d, decreasing = T)]
 # distribucion de grado
@@ -280,7 +281,7 @@ El coeficiente de agrupamiento es una medida de agrupamiento global que caracter
 # numero de triangulos
 sum(count_triangles(lazega))
 # transitividad
-transitivity(lazega)
+igraph::transitivity(lazega)
 ```
 
 # Modelo de grafos aleatorios
