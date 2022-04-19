@@ -10,6 +10,10 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 3. Modelo Binomial.
 4. Modelo de Grafos Aleatorios.
 5. Modelo Poisson.
+6. Métodos de Monte Carlo.
+7. Modelo Normal.
+8. Muestreador de Gibbs.
+9. Modelo Jerárquico Normal 1.
 
 ## Talleres 
 
