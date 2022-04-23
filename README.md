@@ -26,3 +26,4 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 - Taller 4.
 - Taller 4 - Solución.
 - Taller 5.
+- Taller 5 - Solución.
