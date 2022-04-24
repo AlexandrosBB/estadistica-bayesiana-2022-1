@@ -14,6 +14,7 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 7. Modelo Normal.
 8. Muestreador de Gibbs.
 9. Modelo Normal Jerárquico 1.
+10. Modelo Normal Jerárquico 2.
 
 ## Talleres 
 
