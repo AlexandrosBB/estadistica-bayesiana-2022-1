@@ -1,5 +1,5 @@
 ---
-title: "Modelo Normal Jerárquico 1"
+title: "Modelo Normal Jerárquico 1: Medias Específicas"
 author: 
 - Juan Sosa PhD
 - Webpage https://sites.google.com/view/juansosa/ 
@@ -127,6 +127,7 @@ for (j in 1:m) {
   Y[[j]]   <- y[index]
 }
 ```
+
 ## Análisis exploratorio
 
 ```{r}
@@ -170,8 +171,6 @@ hist(ybar, freq = F, main="", xlab="Promedio", ylab="Densidad", border="gray90",
 plot(nj, ybar, xlab="Tamaño del grupo", ylab="Promedio", pch = 16, col="gray80")
 ```
 
-
-
 ## Modelo jerárquico Normal con medias específicas
 
 **Distribución muestral:**
@@ -199,12 +198,12 @@ $$
 
 Teniendo en cuenta la información de la prueba, el modelo se ajusta utilizando los siguientes hiperparámetros: 
 $$
-\mu_0 = 50\qquad
-\gamma^2_0 = 25\qquad
-\eta_0 = 1\qquad
-\tau^2_0 = 100\qquad
-\nu_0 = 1\qquad
-\sigma^2_0 = 100
+\mu_0 = 50\,,\qquad
+\gamma^2_0 = 25\,,\qquad
+\eta_0 = 1\,,\qquad
+\tau^2_0 = 100\,,\qquad
+\nu_0 = 1\,,\qquad
+\sigma^2_0 = 100\,.
 $$
 ## Estimación
 
@@ -219,8 +218,8 @@ s20  <- 100
 # almacenamiento
 S <- 10000
 THETA <- matrix(data = NA, nrow = S, ncol = m+3)
-LP    <- NULL
-# valores inciales
+LP <- NULL
+# valores iniciales
 theta <- ybar
 sig2  <- var(y)
 mu    <- mean(theta)
@@ -235,7 +234,7 @@ for (s in 1:S) {
   # actualizar sigma^2
   sig2 <- 1/rgamma(n = 1, shape = 0.5*(nu0 + n), rate = 0.5*(nu0*s20 + sum((nj-1)*s2 + nj*(ybar - theta)^2)))
   # actualizar mu
-  vmu <- 1/(m/tau2+1/g20)
+  vmu <- 1/(1/g20 + m/tau2)
   mu  <- rnorm(n = 1, mean = vmu*(mu0/g20 + m*mean(theta)/tau2), sd = sqrt(vmu)) 
   # actualizar tau^2
   tau2 <- 1/rgamma(n = 1, shape = 0.5*(eta0 + m), rate = 0.5*(eta0*t20 + (m-1)*var(theta) + m*(mean(theta) - mu)^2))
@@ -261,27 +260,27 @@ plot(LP, xlab="Iteración", type ="l", ylab="Log-verosimilitud")
 ```{r, fig.width=10, fig.height=5}
 # cadenas
 par(mfrow=c(1,1),mar=c(2.75,2.75,.5,.5),mgp=c(1.7,.7,0))
-plot(THETA[,m+1], xlab="Iteración", type ="l", ylab=expression(sigma^2))
+plot(THETA$sig2, xlab="Iteración", type ="l", ylab=expression(sigma^2))
 ```
 
 ```{r, fig.width=10, fig.height=5}
 # cadenas
 par(mfrow=c(1,1),mar=c(2.75,2.75,.5,.5),mgp=c(1.7,.7,0))
-plot(THETA[,m+2], xlab="Iteración", type ="l", ylab=expression(mu))
+plot(THETA$mu, xlab="Iteración", type ="l", ylab=expression(mu))
 ```
 
 ```{r, fig.width=10, fig.height=5}
 # cadenas
 par(mfrow=c(1,1),mar=c(2.75,2.75,.5,.5),mgp=c(1.7,.7,0))
-plot(THETA[,m+3], xlab="Iteración", type ="l", ylab=expression(tau^2))
+plot(THETA$tau2, xlab="Iteración", type ="l", ylab=expression(tau^2))
 ```
 
 ```{r, fig.width=12, fig.height=4}
 # autocorrelaciones
 par(mfrow=c(1,3), mar=c(3,3,2.5,1),mgp=c(1.75,.75,0))
-acf(THETA[,m+1], main=expression(sigma^2))
-acf(THETA[,m+2], main=expression(mu))
-acf(THETA[,m+3], main=expression(tau^2))
+acf(THETA$sig2, main=expression(sigma^2))
+acf(THETA$mu,   main=expression(mu))
+acf(THETA$tau2, main=expression(tau^2))
 ```
 
 ```{r}
@@ -304,14 +303,14 @@ summary(apply(THETA[,1:m],2,sd)/sqrt(neff_THETA))
 # distribuciones posteriores para mu, sigma^2 and tau^2
 par(mfrow=c(1,3),mar=c(2.75,2.75,.5,.5),mgp=c(1.7,.7,0))
 # mu
-plot(density(THETA[,m+2],adj=2),xlab=expression(mu),main="",lwd=2,ylab=expression(paste(italic("p("),mu,"|",italic(y[1]),"...",italic(y[m]),")")))
-abline( v=quantile(THETA[,m+2],c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3) )
+plot(density(THETA$mu,adj=2),xlab=expression(mu),main="",lwd=2,ylab=expression(paste(italic("p("),mu,"|",italic(y[1]),"...",italic(y[m]),")")))
+abline( v=quantile(THETA$mu,c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3) )
 # sigma^2
-plot(density(sqrt(THETA[,m+1]),adj=2),xlab=expression(sigma),main="", lwd=2,ylab=expression(paste(italic("p("),sigma,"|",italic(y[1]),"...",italic(y[m]),")")))
-abline( v=quantile(sqrt(THETA[,m+1]),c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3) )
+plot(density(sqrt(THETA$sig2),adj=2),xlab=expression(sigma),main="", lwd=2,ylab=expression(paste(italic("p("),sigma,"|",italic(y[1]),"...",italic(y[m]),")")))
+abline( v=quantile(sqrt(THETA$sig2),c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3) )
 # tau^2
-plot(density(sqrt(THETA[,m+3]),adj=2),xlab=expression(tau),main="",lwd=2,ylab=expression(paste(italic("p("),tau,"|",italic(y[1]),"...",italic(y[m]),")")))
-abline( v=quantile(sqrt(THETA[,m+3]),c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3) )
+plot(density(sqrt(THETA$tau2),adj=2),xlab=expression(tau),main="",lwd=2,ylab=expression(paste(italic("p("),tau,"|",italic(y[1]),"...",italic(y[m]),")")))
+abline( v=quantile(sqrt(THETA$tau2),c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3) )
 ```
 
 Proporción de proporción de la variabilidad debida a la intravarianza (variabilidad dentro): 
@@ -319,17 +318,18 @@ $\eta = \sigma^2/(\sigma^2+\tau^2)$.
 
 ```{r, fig.width=6, fig.height=6}
 # proporcion intravarianza
-eta <- 100*THETA[,m+1]/(THETA[,m+1] + THETA[,m+3])
+eta <- 100*THETA$sig2/(THETA$sig2 + THETA$tau2)
 plot(density(eta,adj=2), xlab=expression(eta),main="",lwd=2, ylab=expression(paste(italic("p("),eta,"|",italic(y[1]),"...",italic(y[m]),")")))
 abline(v=quantile(eta,c(.025,.5,.975)),col=c(2,4,2),lty=c(3,2,3))
 ```
 
 ```{r}
 # medias posteriores
-mean(THETA[,m+2])
-mean(sqrt(THETA[,m+1]))
-mean(sqrt(THETA[,m+3]))
+mean(THETA$mu)
+mean(sqrt(THETA$sig2))
+mean(sqrt(THETA$tau2))
 ```
+
 El 99% de los puntajes dentro de los departamentos están distanciados a 3 × 13 = 39 puntos entre sí, mientras que el 99% de los puntajes promedio de los departamentos están distanciados a 3 × 9 = 27 puntos entre sí.
 
 Además se observa que la media global es aproximadamente 54, lo cual coincide con el diseño de la prueba.

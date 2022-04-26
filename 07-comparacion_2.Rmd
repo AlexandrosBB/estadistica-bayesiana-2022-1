@@ -1,5 +1,5 @@
 ---
-title: "Modelo Jerárquico Normal 2"
+title: "Modelo Normal Jerárquico 2: Medias y Varianzas Específicas"
 author: 
 - Juan Sosa PhD
 - Webpage https://sites.google.com/view/juansosa/ 
@@ -179,6 +179,48 @@ mu0  <- 50
 g20  <- 25
 eta0 <- 1  
 t20  <- 100
+nu0  <- 1  
+s20  <- 100
+# almacenamiento
+S <- 10000
+THETA0 <- matrix(data = NA, nrow = S, ncol = m+3)
+LP <- NULL
+# valores iniciales
+theta <- ybar
+sig2  <- var(y)
+mu    <- mean(theta)
+tau2  <- var(theta)
+# MCMC
+tictoc::tic()
+set.seed(1)
+for (s in 1:S) {
+  # actualizar theta
+  vtheta <- 1/(1/tau2 + nj/sig2)
+  theta  <- rnorm(n = m, mean = vtheta*(mu/tau2 + nj*ybar/sig2), sd = sqrt(vtheta))
+  # actualizar sigma^2
+  sig2 <- 1/rgamma(n = 1, shape = 0.5*(nu0 + n), rate = 0.5*(nu0*s20 + sum((nj-1)*s2 + nj*(ybar - theta)^2)))
+  # actualizar mu
+  vmu <- 1/(1/g20 + m/tau2)
+  mu  <- rnorm(n = 1, mean = vmu*(mu0/g20 + m*mean(theta)/tau2), sd = sqrt(vmu)) 
+  # actualizar tau^2
+  tau2 <- 1/rgamma(n = 1, shape = 0.5*(eta0 + m), rate = 0.5*(eta0*t20 + (m-1)*var(theta) + m*(mean(theta) - mu)^2))
+  # almacenar valores
+  THETA0[s,] <- c(theta, sig2, mu, tau2)
+  # log-verosimilitud
+  LP[s] <- sum(dnorm(x = y, mean = rep(theta, nj), sd = sqrt(sig2), log = T))
+}
+THETA0 <- as.data.frame(THETA0)
+colnames(THETA0) <- c(paste0("theta", 1:m),"sig2","mu","tau2")
+tictoc::toc()
+# FINAL DEL ALGORITMO
+```
+
+```{r}
+# hiperparametros
+mu0  <- 50 
+g20  <- 25
+eta0 <- 1  
+t20  <- 100
 lam0 <- 1  
 al0  <- 1
 be0  <- 1/100 
@@ -226,22 +268,30 @@ tictoc::toc()
 
 ## Convergencia
 
-```{r, fig.width=10, fig.height=5, eval = F}
+```{r, fig.width=10, fig.height=5}
 # cadenas
 par(mfrow=c(1,1),mar=c(2.75,2.75,.5,.5),mgp=c(1.7,.7,0))
 plot(LP, xlab="Iteracion", type ="l", ylab="Log-verosimilitud")
 ```
 
-```{r, eval = F}
+```{r}
 # tamaños efectivos de muestra
 summary(coda::effectiveSize(THETA))
 ```
 
 ## Inferencia
 
-```{r, fig.width=10, fig.height=5}
+```{r, fig.width=10, fig.height=10}
 # graficos
-par(mfrow=c(1,2),mar=c(3,3,1,1),mgp=c(1.75,.75,0))
+par(mfrow=c(2,2),mar=c(3,3,1,1),mgp=c(1.75,.75,0))
+# posterior mu
+plot(density(THETA$mu,adj=2),lwd=2,main="",xlab=expression(mu), ylab=expression(paste(italic("p("),mu,"|",italic(y[1]),"...",italic(y[m]),")")))
+lines(density(THETA0$mu,adj=2), col = "green")
+abline(v=quantile(THETA$mu, c(.025,.5,.975)), col=c(2,4,2), lty=c(3,2,3))
+# posterior tau^2
+plot(density(sqrt(THETA$tau2),adj=2),lwd=2,main="",xlab=expression(tau), ylab=expression(paste(italic("p("),tau,"|",italic(y[1]),"...",italic(y[m]),")")))
+lines(density(sqrt(THETA0$tau2),adj=2), col = "green")
+abline(v=quantile(sqrt(THETA$tau2), c(.025,.5,.975)), col=c(2,4,2), lty=c(3,2,3))
 # posterior nu
 plot(table(THETA$nu),xlab=expression(nu[0]), ylab=expression(paste(italic("p("),nu,"|",italic(y[1]),"...",italic(y[m]),")")))
 # posterior sigma^2
@@ -297,4 +347,22 @@ abline(v = 1:m, col = "gray95", lwd = 1, lty = 3)
 abline(h = 5,  lty = 2, col = 3)
 abline(h = 10, lty = 2, col = "#FFA500")
 abline(h = 15, lty = 2, col = 2)
+```
+
+```{r, fig.width=10, fig.height=5}
+shat <- colMeans(sqrt(THETA[,(m+1):(2*m)]))
+ic1  <- apply(X = sqrt(THETA[,(m+1):(2*m)]), MARGIN = 2, FUN = function(x) quantile(x, c(0.025,0.975)))
+shat <- shat[ ranking]
+ic1  <- ic1 [,ranking]
+# grafico
+par(mfrow=c(1,1),mar=c(4,4,1.5,1),mgp=c(2.5,.75,0))
+plot(NA, NA, xlab = "Departamento", ylab = "Puntaje", main = paste0("Desv. Estándar"), xlim = c(1,m), ylim = range(sqrt(THETA[,(m+1):(2*m)])), cex.axis = 0.75, xaxt = "n")
+axis(side = 1, at = 1:m, labels = F)
+text(x = (1:m) + 0.3, y = par("usr")[3] - 2, labels = ids2, srt = 70, pos = 2, xpd = T, cex = 0.75)
+abline(v = 1:m, col = "gray95", lwd = 1, lty = 3)
+abline(h = 10,  col = "gray85", lwd = 2, lty = 1)
+for (j in 1:m) {
+  segments(x0 = j, y0 = ic1[1,j], x1 = j, y1 = ic1[2,j], lwd = 1, col = colo[j])
+  lines(x = j, y = shat[j], type = "p", pch = 16, cex = 0.8, col = colo[j])
+}
 ```
