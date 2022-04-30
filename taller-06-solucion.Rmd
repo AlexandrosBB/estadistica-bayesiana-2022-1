@@ -21,9 +21,11 @@ knitr::opts_chunk$set(echo = TRUE)
 \newcommand{\rg}{\right}
 \newcommand{\ra}{\sqrt}
 \newcommand{\xv}{\boldsymbol{x}}
+\newcommand{\yv}{\boldsymbol{y}}
 \newcommand{\tev}{\boldsymbol{\theta}}
 \newcommand{\ga}{\gamma}
 \newcommand{\ro}{\rho}
+\newcommand{\ep}{\epsilon}
 \newcommand{\lam}{\lambda}
 \newcommand{\ups}{\upsilon}
 \newcommand{\te}{\theta}
@@ -38,6 +40,7 @@ knitr::opts_chunk$set(echo = TRUE)
 \newcommand{\pro}{\propto}
 \newcommand{\ent}{\Rightarrow}
 \newcommand{\caja}{\boxed}
+\newcommand{\var}[1]{\mathbb{V}ar\left(#1\right)}
 \newcommand{\esp}[1]{\mathbb{E}\left(#1\right)}
 \newcommand{\ex}[1]{ \exp{ \left\{ #1 \right\} } }
 
