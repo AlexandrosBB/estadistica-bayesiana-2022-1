@@ -17,6 +17,7 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 10. Modelo Normal Jerárquico 2.
 11. Comparación de Modelos.
 12. Agrupamiento.
+13. Modelo Normal Multivariado.
 
 ## Talleres 
 
