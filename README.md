@@ -18,6 +18,7 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 11. Comparación de Modelos.
 12. Agrupamiento.
 13. Modelo Normal Multivariado.
+14. Introducción a la Regresión Lineal.
 
 ## Talleres 
 
@@ -33,3 +34,4 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 - Taller 5 - Solución.
 - Taller 6.
 - Taller 6 - Solución.
+- Taller 7.
