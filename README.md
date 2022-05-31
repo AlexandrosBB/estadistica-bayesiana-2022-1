@@ -19,6 +19,8 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 12. Agrupamiento.
 13. Modelo Normal Multivariado.
 14. Introducción a la Regresión Lineal.
+15. Modelo Jerárquico Normal.
+16. Regresión Poisson.
 
 ## Talleres 
 
