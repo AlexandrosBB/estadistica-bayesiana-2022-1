@@ -21,6 +21,7 @@ Materiales del curso de **Estadística Bayesiana** ofreciendo en el Departamento
 14. Introducción a la Regresión Lineal.
 15. Modelo Jerárquico Normal.
 16. Regresión Poisson.
+17. Regresión con Errores Correlacionados.
 
 ## Talleres 
 
